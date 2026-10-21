@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Локальная обвязка скилов (не трекается)
+.agents/
+skills-lock.json
