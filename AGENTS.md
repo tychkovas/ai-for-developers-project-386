@@ -4,41 +4,30 @@
 
 ## Команды
 
-```bash
-npm run dev        # dev-сервер на http://localhost:5173
-npm run lint       # oxlint (НЕ eslint — линтер из шаблона create-vite v9)
-npm run build      # проверка типов (tsc -b) + продакшен-сборка
-npm run preview    # локальный просмотр собранного dist/
-```
+- `npm install` — установка зависимостей (пакетный менеджер — npm, lock-файл закоммичен).
+- `npm run dev` — dev-сервер на http://localhost:5173.
+- `npm run lint` — линтер **oxlint**, НЕ eslint (шаблон create-vite v9).
+- `npm run build` — проверка типов (`tsc -b`) + продакшен-сборка. Отдельного typecheck-скрипта нет.
+- `npm run test` — vitest + дымовой тест (`scripts/smoke.mjs`: `vite preview` на :4173 → проверка HTTP 200). Нужен свежий `dist/`, поэтому перед ним — `npm run build`.
 
-- Отдельного скрипта typecheck нет: типы проверяются внутри `npm run build`.
-- Используется npm, lock-файл закоммичен → в CI работает `npm ci`.
-- Node: локально 26, в CI (`ci.yml`) — 22. Vite 8 требует Node 20.19+ / 22.12+.
+Порядок проверки перед коммитом: `lint` → `build` → `test`.
 
-## Перед каждым коммитом
+- Node: локально 26, в CI — 22; Vite 8 требует Node 20.19+ / 22.12+.
+- `tsconfig.json` — «зонтик» (solution style): опции кода в `tsconfig.app.json` (src/), `tsconfig.node.json` — для `vite.config.ts`. Не добавлять опции в зонтик.
+- `index.html` лежит в корне — входная точка Vite, не перемещать в public/.
 
-1. `npm run lint`
-2. `npm run build`
-3. Убедиться, что `npm run dev` поднимается без ошибок
-4. Коммит строго по Conventional Commits: `feat:`, `fix:`, `docs:`, `chore:` и т.д.
+## Архитектурное правило
 
-## Критичные правила
+Используй готовые компоненты и хуки Mantine. Не пиши кастомные стили и не создавай велосипеды, если в библиотеке есть готовое решение.
 
-- `.github/workflows/hexlet-check.yml` — тесты Хекслета, запускаются на каждый пуш во все ветки. **Не удалять и не переименовывать** ни файл, ни репозиторий.
-- `.github/workflows/ci.yml` — наш CI: `npm ci` → lint → build (push в main и PR).
-- Язык README и текстов UI — русский. Коммит-сообщения — английские, conventional.
+- Стили Mantine подключаются один раз в `src/main.tsx`, `MantineProvider` — в `src/App.tsx`. Не дублировать.
+- Vitest подхватывает `vite.config.ts` автоматически; окружение по умолчанию `node` — для тестов React-компонентов понадобится `jsdom`.
 
-## Специфика Mantine
+## Коммиты
 
-- **Сначала искать готовое в Mantine** (120+ компонентов, хуки, `@mantine/form`): не писать кастомные стили и компоненты, если решение есть в библиотеке.
-- Стили подключаются один раз в `src/main.tsx`: `@mantine/core/styles.css` (обязателен) + styles.css каждого используемого пакета (у `@mantine/hooks` и `@mantine/form` стилей нет).
-- `MantineProvider` — в `src/App.tsx`.
-- Установлены пакеты: `@mantine/core`, `@mantine/hooks`, `@mantine/dates` (календари для бронирования), `@mantine/form`.
-- `postcss.config.cjs` (postcss-preset-mantine) обязателен. Расширение именно `.cjs`: в `package.json` стоит `"type": "module"`.
-- CSS-переменные Mantine и типографика описаны в теме; не дублировать в кастомном CSS.
+- Строго используй спецификацию Conventional Commits; сообщения — на английском.
+- Язык README и текстов UI — русский.
 
-## Точки входа
+## Критично
 
-- `index.html` в корне — входная точка Vite (не перемещать в public/): от `<script src="/src/main.tsx">` строится граф модулей.
-- `tsconfig.json` — «зонтик» (solution style): `tsconfig.app.json` для кода в `src/`, `tsconfig.node.json` для `vite.config.ts` (Node-окружение).
-- `dist/` — генерируется, не коммитится.
+- `.github/workflows/hexlet-check.yml` — тесты Хекслета, запускаются на каждый пуш. **Не удалять и не переименовывать** ни файл, ни репозиторий.
