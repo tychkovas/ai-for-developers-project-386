@@ -10,20 +10,35 @@
 
 ## Стек
 
-- Разное
+- [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vite.dev/)
+- [React](https://react.dev/)
+- [Mantine](https://mantine.dev/) — UI-библиотека
+- [oxlint](https://oxc.rs/docs/guide/usage/linter) — линтер
 
 ## Установка
-
-<!-- Опишите установку: клонирование, зависимости, переменные окружения -->
 
 ```bash
 git clone https://github.com/tychkovas/ai-for-developers-project-386.git
 cd ai-for-developers-project-386
+npm install
 ```
 
 ## Использование
 
-<!-- Добавьте примеры запуска и запись asciinema — именно это смотрит работодатель -->
+```bash
+# Запуск dev-сервера (http://localhost:5173)
+npm run dev
+
+# Проверка линтером
+npm run lint
+
+# Продакшен-сборка (+ проверка типов через tsc)
+npm run build
+
+# Локальный просмотр продакшен-сборки
+npm run preview
+```
 
 ---
 
