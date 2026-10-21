@@ -5,6 +5,7 @@ SPA для бронирования звонков (упрощённый Cal.com
 ## Команды — только make
 
 - Все операции через Makefile: `make install` / `make dev` / `make build` / `make lint` / `make test`. Не вызывай npm-скрипты напрямую.
+- Цели генерации артефактов контракта: `make openapi` (spec/ → docs/openapi.yaml), `make sdk` (→ src/api/, hey-api), `make server` (→ server/, openapi-generator, нужен Java 11+), `make generate` — вся цепочка openapi → sdk → server. Сгенерированные `src/api/` и `server/` коммитятся; в type-check (`tsconfig.app.json`) и линт (`ignorePatterns` в .oxlintrc.json) не входят.
 - `make test` сам запускает сборку: smoke-тест поднимает `vite preview` из `dist/`, без свежей сборки он падает.
 - Линтер — **oxlint** (`.oxlintrc.json`), не eslint.
 
@@ -22,7 +23,7 @@ SPA для бронирования звонков (упрощённый Cal.com
 
 ## CI
 
-- `.github/workflows/ci.yml`: lint → build → test → openapi-фрешнес (`make openapi && git diff --exit-code docs/openapi.yaml`) на каждый push/PR.
+- `.github/workflows/ci.yml`: lint → build → test → свежесть артефактов генерации (`make generate` + чистота git status по `docs/openapi.yaml`, `src/api`, `server/`) на каждый push/PR. Java в CI ставится явно (`actions/setup-java`, temurin 21).
 - Не удаляй и не переименовывай `.github/workflows/hexlet-check.yml` и репозиторий — от них зависят проверки Хекслета.
 - Релизы автоматизированы release-please: тип commit-сообщения (`feat`/`fix`) определяет версию релиза.
 

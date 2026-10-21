@@ -41,6 +41,22 @@ make build
 make test
 ```
 
+## Артефакты API-контракта
+
+Контракт описан в TypeSpec (`spec/main.tsp`) и генерируется в артефакты:
+
+```bash
+# Вся цепочка: spec/ -> docs/openapi.yaml -> src/api (SDK) -> server (стаб NestJS)
+make generate
+
+# По отдельности
+make openapi   # TypeSpec -> docs/openapi.yaml
+make sdk       # docs/openapi.yaml -> src/api/ (клиентский SDK, hey-api)
+make server    # docs/openapi.yaml -> server/ (openapi-generator, нужен Java 11+)
+```
+
+Сгенерированные `docs/openapi.yaml`, `src/api/` и `server/` закоммичены и свежесть проверяется в CI. `src/api/` и `server/` — артефакты: они не компилируются и не линтуются.
+
 Локальный просмотр продакшен-сборки: `npm run preview`
 
 ---

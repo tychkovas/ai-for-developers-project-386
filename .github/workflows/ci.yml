@@ -29,5 +29,10 @@ jobs:
       - name: Test (vitest + smoke)
         run: npm run test
 
-      - name: "OpenAPI: freshness (docs/openapi.yaml == make openapi)"
-        run: make openapi && git diff --exit-code docs/openapi.yaml
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: "Generation freshness (make generate == committed artifacts)"
+        run: make generate && test -z "$(git status --porcelain -- docs/openapi.yaml src/api server)"

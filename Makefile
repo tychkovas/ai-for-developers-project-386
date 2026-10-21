@@ -1,4 +1,4 @@
-.PHONY: help install dev build lint test openapi sdk server
+.PHONY: help install dev build lint test openapi sdk server generate
 
 help: ## Показать список целей
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2}'
@@ -24,6 +24,11 @@ sdk: ## Сгенерировать клиентский SDK (docs/openapi.yaml -
 server: ## Сгенерировать серверные артефакты (docs/openapi.yaml -> server/, нужен Java 11+)
 	npx openapi-generator-cli generate -i docs/openapi.yaml -g typescript-nestjs -o server \
 		--additional-properties=npmName=call-scheduling-server,npmVersion=0.0.0,supportsES6=true
+
+generate: ## Перегенерировать всю цепочку артефактов (openapi -> sdk -> server)
+	$(MAKE) openapi
+	$(MAKE) sdk
+	$(MAKE) server
 
 test: build ## Запустить тесты (нужен свежий dist/, поэтому сначала build)
 	npm test
