@@ -8,12 +8,34 @@
 - Стили подключаются один раз в `src/main.tsx` (`@mantine/core/styles.css` + `styles.css` используемых пакетов). `MantineProvider` — в `src/App.tsx`, не дублировать.
 - `postcss.config.cjs` (postcss-preset-mantine) обязателен; расширение `.cjs`, т.к. в `package.json` `"type": "module"`.
 
+## Скилы
+
+- Скилы из `mattpocock/skills` лежат в `.agents/skills/<имя>/SKILL.md`; зафиксированные версии — `skills-lock.json`.
+- OpenCode V2 обнаруживает `.agents/skills/` автоматически (project-совместимый источник скилов) — `opencode.json` для этого не нужен.
+- `.agents/` и `skills-lock.json` не трекаются git (локальная обвязка) — не добавлять в коммиты и не удалять.
+- Подходящий под задачу скил искать в `.agents/skills/` (`tdd`, `code-review`, `pr`, `diagnosing-bugs`, `research`, …); перед применением читать его `SKILL.md` целиком.
+- Часть скилов помечена `disable-model-invocation: true` — они не рекламируются модели, но остаются зарегистрированными: загружаются явно через `skill` tool по ID (пользователь — через `@skill-id`). Скилы — не команды: в меню `/` их нет.
+
+## Agent skills
+
+### Issue tracker
+
+Задачи — в GitHub Issues репозитория (через `gh` CLI). See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Дефолтные метки: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: `GLOSSARY.md` и `docs/adr/` в корне репо. See `docs/agents/domain.md`.
+
 ## Команды
 
 - `npm run dev` — dev-сервер http://localhost:5173.
 - `npm run lint` — **oxlint**, не eslint.
 - `npm run build` — `tsc -b` + сборка; отдельного typecheck нет.
-- `npm test` — vitest + дымовой тест (`vite preview` на :4173). Нужен свежий `dist/` → перед тестом `npm run build`.
+- `npm test` — `vitest run --passWithNoTests` + дымовой тест `scripts/smoke.mjs` (`vite preview` на :4173). Юнит-тестов пока нет. Нужен свежий `dist/` → перед тестом `npm run build`.
 
 Порядок перед коммитом: `lint` → `build` → `test`.
 
@@ -26,4 +48,5 @@
 ## CI/CD
 
 - Код перед коммитом должен запускаться локально и не ломать проверки Хекслета: `.github/workflows/hexlet-check.yml`. **Не удалять и не переименовывать** ни файл, ни репозиторий.
-- `.github/workflows/ci.yml` — `npm ci` → lint → build (push в main и PR).
+- `.github/workflows/ci.yml` — `npm ci` → lint → build → test (push в main и PR).
+- Релизы автоматизированы release-please (`.github/workflows/release-please.yml`) по Conventional Commits в main — тип commit-сообщения влияет на версию релиза.
