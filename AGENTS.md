@@ -10,7 +10,7 @@ SPA для бронирования звонков (упрощённый Cal.com
 
 ## Архитектура
 
-- UI — строго Mantine (`@mantine/core`, `@mantine/hooks`, `@mantine/dates`, `@mantine/form`). Используй готовые компоненты и хуки. Не пиши кастомные стили и не создавай собственные реализации компонентов/хуков, если готовое решение есть в библиотеке.
+- UI — строго Mantine (`@mantine/core`, `@mantine/hooks`, `@mantine/dates`, `@mantine/form`). Используй готовые компоненты и хуки: прежде чем писать свои стили, компоненты или хуки, сначала ищи готовое решение в библиотеке и предпочитай его.
 - Стили Mantine подключаются один раз в `src/main.tsx`; `MantineProvider` — один раз в `src/App.tsx`. Не дублируй.
 - `postcss.config.cjs` обязателен (postcss-preset-mantine); расширение `.cjs` — из-за `"type": "module"` в package.json.
 
