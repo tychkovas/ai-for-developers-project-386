@@ -13,7 +13,7 @@
 - Скилы лежат в `.agents/skills/<имя>/SKILL.md`; основной набор — `mattpocock/skills` (38), дополнительно `find-skills` из `vercel-labs/skills`. Источники и версии — `skills-lock.json` (управление через `npx skills add|update|remove|list`).
 - OpenCode V2 обнаруживает `.agents/skills/` автоматически (project-совместимый источник скилов) — `opencode.json` для этого не нужен.
 - Осторожно с `npx skills remove`: удаляет копии во всех местах сразу (`remove -g` убрал и глобальную `~/.agents/skills/`, и проектную). После remove/add сверять `npx skills list` с `skills-lock.json`.
-- `.agents/` и `skills-lock.json` не трекаются git (локальная обвязка) — не добавлять в коммиты и не удалять.
+- `skills-lock.json` трекается git (lockfile скилов, аналог `package-lock.json`); `.agents/` — генерируемое из lock содержимое, в git не попадает (в `.gitignore`). Восстановление на свежем клоне: `npx skills experimental_install`.
 - Подходящий под задачу скил искать в `.agents/skills/` (`tdd`, `code-review`, `pr`, `diagnosing-bugs`, `research`, …); перед применением читать его `SKILL.md` целиком.
 - Часть скилов помечена `disable-model-invocation: true` — они не рекламируются модели, но остаются зарегистрированными: загружаются явно через `skill` tool по ID (пользователь — через `@skill-id`). Скилы — не команды: в меню `/` их нет.
 
