@@ -1,0 +1,7 @@
+openapi: 3.0.0
+info:
+  title: Календарь звонков
+  version: 0.0.0
+tags: []
+paths: {}
+components: {}
