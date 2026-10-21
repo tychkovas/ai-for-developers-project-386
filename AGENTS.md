@@ -22,7 +22,7 @@ SPA для бронирования звонков (упрощённый Cal.com
 
 ## CI
 
-- `.github/workflows/ci.yml`: lint → build → test на каждый push/PR.
+- `.github/workflows/ci.yml`: lint → build → test → openapi-фрешнес (`make openapi && git diff --exit-code docs/openapi.yaml`) на каждый push/PR.
 - Не удаляй и не переименовывай `.github/workflows/hexlet-check.yml` и репозиторий — от них зависят проверки Хекслета.
 - Релизы автоматизированы release-please: тип commit-сообщения (`feat`/`fix`) определяет версию релиза.
 

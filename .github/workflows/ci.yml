@@ -28,3 +28,6 @@ jobs:
 
       - name: Test (vitest + smoke)
         run: npm run test
+
+      - name: "OpenAPI: freshness (docs/openapi.yaml == make openapi)"
+        run: make openapi && git diff --exit-code docs/openapi.yaml
