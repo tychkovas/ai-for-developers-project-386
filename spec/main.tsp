@@ -89,6 +89,50 @@ model CreateBooking {
   guestEmail: string;
 }
 
+// ===== Ошибки (спека + карта #8, тикет #10) =====
+
+@doc("Машиночитаемый код ошибки: для программной ветки; сообщения для людей — русские.")
+enum ErrorCode {
+  @doc("Ресурс не найден: неизвестный id типа события или записи.")
+  not_found,
+
+  @doc("Ошибка валидации полей запроса: имя, email, id, длительность.")
+  validation_failed,
+
+  @doc("Конфликт уникальности: id типа события уже существует.")
+  id_taken,
+
+  @doc("Слот занят другой записью или уже прошёл.")
+  slot_taken,
+}
+
+@doc("Общая схема ошибки: машиночитаемый код + русское человекочитаемое сообщение.")
+model Error {
+  @doc("Машиночитаемый код ошибки.")
+  code: ErrorCode;
+
+  @doc("Человекочитаемое сообщение на русском, пригодное для показа в UI.")
+  message: string;
+}
+
+@doc("Неизвестный id типа события или записи (спека: неизвестный slug → каталог, невалидный slot → назад).")
+@error
+model NotFoundError extends Error {
+  @statusCode status: 404;
+}
+
+@doc("Валидация полей тела запроса (спека 6.4: «Введите имя», «Введите корректный email»).")
+@error
+model ValidationError extends Error {
+  @statusCode status: 400;
+}
+
+@doc("Конфликт: дубль id типа события (спека 6.6) или занятый/прошедший слот при создании записи.")
+@error
+model ConflictError extends Error {
+  @statusCode status: 409;
+}
+
 // ===== Эндпоинты: сценарии гостя и владельца (спека, раздел 6) =====
 
 @tag("EventTypes")
@@ -103,14 +147,16 @@ op getEventTypes(): EventType[];
 @operationId("getEventType")
 @doc("Тип события по идентификатору (спека, раздел 6.3). Неизвестный id — 404.")
 @get
-op getEventType(@path id: string): EventType;
+op getEventType(@path id: string): EventType | NotFoundError;
 
 @tag("EventTypes")
 @route("/event-types")
 @operationId("createEventType")
-@doc("Создание типа события владельцем календаря из админки (спека, раздел 6.6). Правка и удаление — вне скоупа.")
+@doc(
+  "Создание типа события владельцем календаря из админки (спека, раздел 6.6). Правка и удаление — вне скоупа. Некорректные поля — 400, дубль id — 409.",
+)
 @post
-op createEventType(@body body: CreateEventType): EventType;
+op createEventType(@body body: CreateEventType): EventType | ValidationError | ConflictError;
 
 @tag("Slots")
 @route("/event-types/{id}/slots")
@@ -122,7 +168,7 @@ op createEventType(@body body: CreateEventType): EventType;
 op getAvailableSlots(
   @path id: string,
   @query date: plainDate,
-): Slot[];
+): Slot[] | NotFoundError;
 
 @tag("Bookings")
 @route("/bookings")
@@ -131,7 +177,7 @@ op getAvailableSlots(
   "Создание записи на выбранный слот (спека, раздел 6.4). Конец вычисляется из длительности типа события. Занятый или прошедший слот — 409.",
 )
 @post
-op createBooking(@body body: CreateBooking): Booking;
+op createBooking(@body body: CreateBooking): Booking | ValidationError | NotFoundError | ConflictError;
 
 @tag("Bookings")
 @route("/bookings")
@@ -149,4 +195,4 @@ op listBookings(@query upcoming?: boolean): Booking[];
 @delete
 op cancelBooking(@path id: string): {
   @statusCode status: 204;
-};
+} | NotFoundError;
