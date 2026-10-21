@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  lint-and-build:
+  lint-build-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -25,3 +25,6 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Test (vitest + smoke)
+        run: npm run test
