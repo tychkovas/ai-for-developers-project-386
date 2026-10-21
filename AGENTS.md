@@ -16,7 +16,9 @@ SPA для бронирования звонков (упрощённый Cal.com
 
 ## Тесты
 
-- Юнит-тестов пока нет (`vitest run --passWithNoTests`). Для тестов React-компонентов нужен jsdom: vitest читает `vite.config.ts`, env по умолчанию node.
+- Компонентные тесты — vitest + @testing-library/react (`src/App.test.tsx`); окружение jsdom настроено в `vite.config.ts` (`test.environment`, `setupFiles: src/test/setup.ts` — мок `window.matchMedia` для MantineProvider).
+- Globals в vitest выключены: `test`/`expect` импортируются в каждом файле, `cleanup()` и сброс history — вручную в `afterEach`.
+- `make test` = юнит-тесты + smoke-тест (`vite preview` из свежего `dist/`, поэтому сборка обязательна).
 
 ## CI
 
