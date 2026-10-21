@@ -3,7 +3,7 @@
 
 [![hexlet-check](https://github.com/tychkovas/ai-for-developers-project-386/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/tychkovas/ai-for-developers-project-386/actions)
 
-Разработайте совместно с ИИ сервис для бронирования календаря
+SPA для записи на звонки (упрощённый Cal.com), разрабатываемый совместно с ИИ.
 
 Учебный проект Хекслета: https://ru.hexlet.io/programs/ai-for-developers
 Как это должно работать: https://files.hexlet.app/a/2ipc5m
@@ -15,30 +15,33 @@
 - [React](https://react.dev/)
 - [Mantine](https://mantine.dev/) — UI-библиотека
 - [oxlint](https://oxc.rs/docs/guide/usage/linter) — линтер
+- [Vitest](https://vitest.dev/) + [@testing-library/react](https://testing-library.com/) — тесты
 
 ## Установка
 
 ```bash
 git clone https://github.com/tychkovas/ai-for-developers-project-386.git
 cd ai-for-developers-project-386
-npm install
+make install
 ```
 
 ## Использование
 
 ```bash
-# Запуск dev-сервера (http://localhost:5173)
-npm run dev
+# Запустить dev-сервер (http://localhost:5173)
+make dev
 
-# Проверка линтером
-npm run lint
+# Проверить линтером (oxlint)
+make lint
 
-# Продакшен-сборка (+ проверка типов через tsc)
-npm run build
+# Продакшен-сборка (tsc + vite build)
+make build
 
-# Локальный просмотр продакшен-сборки
-npm run preview
+# Тесты: юнит + smoke (сборка входит)
+make test
 ```
+
+Локальный просмотр продакшен-сборки: `npm run preview`
 
 ---
 
