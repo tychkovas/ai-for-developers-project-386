@@ -57,6 +57,8 @@ make server    # docs/openapi.yaml -> server/ (openapi-generator, нужен Jav
 
 Сгенерированные `docs/openapi.yaml`, `src/api/` и `server/` закоммичены и свежесть проверяется в CI. `src/api/` и `server/` — артефакты: они не компилируются и не линтуются.
 
+Артефакты генерации утверждены владельцем (2026-10-22).
+
 Локальный просмотр продакшен-сборки: `npm run preview`
 
 ---
